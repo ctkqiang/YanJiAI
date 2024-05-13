@@ -2,7 +2,7 @@
 //  CameraView.swift
 //  IOSYanjiAi
 //
-//  Created by Cheng Tze Keong on 2024/5/12.
+//  Created by 郑子康 on 2024/5/12.
 //
 
 #if canImport(CoreML)
@@ -33,10 +33,11 @@ import CoreMedia
 import Photos
 #endif
 
-class CameraView: UIViewController{
+class CameraView: UIViewController {
     public var isDoubleTapped = false
     
     private var sentimentModel: SentimentModel!
+    private var trafficModel: TrafficModel!
     
     private let captureSession = AVCaptureSession()
     private let videoDataOutput = AVCaptureVideoDataOutput()
@@ -53,6 +54,7 @@ class CameraView: UIViewController{
         super.viewDidLoad()
         
         self.loadSentimentModel()
+        self.loadTrafficModel()
         
         self.addCameraInput()
         self.showCameraInput()
@@ -68,7 +70,7 @@ class CameraView: UIViewController{
         self.previewLayer.frame = view.frame
     }
     
-    private func reloadCameraInput() -> Void {
+    private func reloadCameraInput() {
           
         if let currentInput = self.captureSession.inputs.first {
             self.captureSession.removeInput(currentInput)
@@ -77,13 +79,75 @@ class CameraView: UIViewController{
         self.addCameraInput()
     }
     
+    private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation]) {
+        self.clearDrawings()
+        
+        for observation in results {
+            // 获取边界框坐标
+            let boundingBox = observation.boundingBox
+            let boundingBoxOnScreen = self.previewLayer.layerRectConverted(fromMetadataOutputRect: boundingBox)
+
+            // 获取标签和置信度
+            let label = observation.labels.first?.identifier ?? "未知"
+            let confidence = observation.labels.first?.confidence ?? 0.0
+            let labelText = "\(label) (\(String(format: "%.2f", confidence * 100))%)"
+
+            // 绘制带标签的边界框
+            let boundingBoxLayer = CAShapeLayer()
+            let textLayer = CATextLayer()
+            textLayer.string = labelText
+            
+            let boundingBoxPath = UIBezierPath(rect: boundingBoxOnScreen)
+            boundingBoxLayer.path = boundingBoxPath.cgPath
+            
+            self.view.layer.addSublayer(boundingBoxLayer)
+            boundingBoxLayer.addSublayer(textLayer)
+
+            self.drawings.append(boundingBoxLayer)
+        }
+    }
     
-    public func toggleCamera() -> Void {
+    private func detectTraffic(image: CVPixelBuffer) {
+        guard let model = try? VNCoreMLModel(for: self.trafficModel.model) else {
+            fatalError("创建 VNCoreMLModel 失败")
+        }
+
+        let request = VNCoreMLRequest(model: model) { request, error in
+            guard let results = request.results as? [VNRecognizedObjectObservation] else { return }
+
+            DispatchQueue.main.async {
+                self.handleObjectDetectionResults(results)
+            }
+        }
+
+        let handler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
+
+        do {
+            try handler.perform([request])
+        } catch {
+            NSLog("执行目标检测时出错: \(error)")
+        }
+    }
+    
+    private func loadTrafficModel() {
+        guard let modelURL = Bundle.main.url(forResource: "TrafficModel", withExtension: "mlmodelc") else {
+            fatalError("无法加载 TrafficnModel.mlmodelc")
+        }
+
+        do {
+            self.trafficModel = try TrafficModel(contentsOf: modelURL)
+        } catch {
+            fatalError("无法加载模型: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    public func toggleCamera() {
         self.isDoubleTapped.toggle()
         self.reloadCameraInput()
     }
     
-    private func analyzeSentiment(observedFaces: [VNFaceObservation]) -> Void{
+    private func analyzeSentiment(observedFaces: [VNFaceObservation]) {
         guard let prediction = try? sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else {
             NSLog("情感预测失败")
             return
@@ -102,13 +166,13 @@ class CameraView: UIViewController{
         }
             
         do {
-            sentimentModel = try SentimentModel(contentsOf: modelURL)
+            self.sentimentModel = try SentimentModel(contentsOf: modelURL)
         } catch {
             fatalError("无法加载模型: \(error.localizedDescription)")
         }
     }
     
-    private func addCameraInput() -> Void {
+    private func addCameraInput() {
         guard let device = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera],
             mediaType: .video,
@@ -122,12 +186,12 @@ class CameraView: UIViewController{
         self.captureSession.addInput(cameraInput)
     }
     
-    private func showCameraInput() -> Void {
+    private func showCameraInput() {
         self.previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
     }
     
-    private func getCameraFrame() -> Void {
+    private func getCameraFrame() {
         self.videoDataOutput.videoSettings = [
             (kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(value:kCVPixelFormatType_32BGRA)
         ] as [String: Any]
@@ -144,7 +208,7 @@ class CameraView: UIViewController{
         connection.videoOrientation = .portrait
     }
     
-    private func startRecording() -> Void {
+    private func startRecording() {
         guard !isRecording else { return }
         
         let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -155,7 +219,7 @@ class CameraView: UIViewController{
         self.isRecording = true
     }
     
-    private func stopRecording() -> Void {
+    private func stopRecording() {
         guard isRecording else { return }
             
         self.movieOutput.stopRecording()
@@ -168,7 +232,7 @@ class CameraView: UIViewController{
         return String((0..<length).map { _ in letters.randomElement()! })
     }
 
-    private func detectFaces(image: CVPixelBuffer) -> Void {
+    private func detectFaces(image: CVPixelBuffer) {
         let faceDetectedRequest = VNDetectFaceLandmarksRequest(completionHandler: {vnRequest, err in
             DispatchQueue.main.async {
                 if let results = vnRequest.results as? [VNFaceObservation], results.count > 0 {
@@ -177,6 +241,8 @@ class CameraView: UIViewController{
                     if self.isSentimentAnalysisAvailable {
                         self.analyzeSentiment(observedFaces: results)
                     }
+                    
+                    self.detectTraffic(image: image)
                     
                     NSLog("✅ 检测到 \(results.count) 张人脸")
                     self.showToast(message: "✅ 检测到 \(results.count) 张人脸")
@@ -193,7 +259,7 @@ class CameraView: UIViewController{
         
     }
     
-    private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) -> Void {
+    private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) {
         self.clearDrawings()
         
         let faceBoundingsBoxes: [CAShapeLayer] = observedFaces.map({ (observedFace: VNFaceObservation) ->
@@ -237,7 +303,7 @@ class CameraView: UIViewController{
         }
     }
         
-    private func clearDrawings() -> Void {
+    private func clearDrawings() {
         self.drawings.forEach({ drawing in
             drawing.removeFromSuperlayer()
         })
