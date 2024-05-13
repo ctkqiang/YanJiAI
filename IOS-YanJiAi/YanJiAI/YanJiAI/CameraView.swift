@@ -68,6 +68,21 @@ class CameraView: UIViewController{
         self.previewLayer.frame = view.frame
     }
     
+    private func reloadCameraInput() -> Void {
+          
+        if let currentInput = self.captureSession.inputs.first {
+            self.captureSession.removeInput(currentInput)
+        }
+            
+        self.addCameraInput()
+    }
+    
+    
+    public func toggleCamera() -> Void {
+        self.isDoubleTapped.toggle()
+        self.reloadCameraInput()
+    }
+    
     private func analyzeSentiment(observedFaces: [VNFaceObservation]) -> Void{
         guard let prediction = try? sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else {
             NSLog("情感预测失败")

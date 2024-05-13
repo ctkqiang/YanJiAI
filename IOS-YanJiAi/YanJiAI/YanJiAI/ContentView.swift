@@ -13,12 +13,16 @@ struct ContentView: View {
     var body: some View {
         VStack {
             CameraViewWrapper().onAppear {
-                NSLog("✅")
+                NSLog("🤖 眼迹AI准备就绪 🤖")
                 
                 self.cameraView.showToast(message:"✅")
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .edgesIgnoringSafeArea(.all)
+            .onTapGesture {
+                NSLog("✅ 在点击...")
+                self.cameraView.toggleCamera()
+            }
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
