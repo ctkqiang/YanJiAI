@@ -34,7 +34,7 @@ import Photos
 #endif
 
 class CameraView: UIViewController {
-    public var isDoubleTapped = false
+    @Binding var isDoubleTapped: Bool
     
     private var sentimentModel: SentimentModel!
     private var trafficModel: TrafficModel!
@@ -49,6 +49,15 @@ class CameraView: UIViewController {
     private var isRecording: Bool = false
     
     private lazy var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+    
+    public init(isDoubleTapped: Binding<Bool>) {
+        _isDoubleTapped = isDoubleTapped
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("未实现init(coder:)")
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,6 +92,8 @@ class CameraView: UIViewController {
         self.clearDrawings()
         
         for observation in results {
+            NSLog(results as! String? ?? "nil")
+            
             // 获取边界框坐标
             let boundingBox = observation.boundingBox
             let boundingBoxOnScreen = self.previewLayer.layerRectConverted(fromMetadataOutputRect: boundingBox)
@@ -117,6 +128,7 @@ class CameraView: UIViewController {
 
             DispatchQueue.main.async {
                 self.handleObjectDetectionResults(results)
+                self.showToast(message: "Traffic Found")
             }
         }
 
@@ -148,7 +160,7 @@ class CameraView: UIViewController {
     }
     
     private func analyzeSentiment(observedFaces: [VNFaceObservation]) {
-        guard let prediction = try? sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else {
+        guard let prediction = try? self.sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else {
             NSLog("情感预测失败")
             return
         }
@@ -156,8 +168,6 @@ class CameraView: UIViewController {
         let sentiment = prediction
             
         NSLog("情感: \(sentiment)")
-            
-        // Process sentiment and display the result
     }
     
     private func loadSentimentModel() {
@@ -236,12 +246,12 @@ class CameraView: UIViewController {
         let faceDetectedRequest = VNDetectFaceLandmarksRequest(completionHandler: {vnRequest, err in
             DispatchQueue.main.async {
                 if let results = vnRequest.results as? [VNFaceObservation], results.count > 0 {
-                    self.handleFaceDetectionResults(observedFaces: results)
                     
                     if self.isSentimentAnalysisAvailable {
                         self.analyzeSentiment(observedFaces: results)
                     }
                     
+                    self.handleFaceDetectionResults(observedFaces: results)
                     self.detectTraffic(image: image)
                     
                     NSLog("✅ 检测到 \(results.count) 张人脸")
@@ -258,6 +268,7 @@ class CameraView: UIViewController {
         try? imageResultHandler.perform([faceDetectedRequest])
         
     }
+    
     
     private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) {
         self.clearDrawings()
@@ -346,44 +357,46 @@ class CameraView: UIViewController {
 }
 
 struct CameraViewWrapper: UIViewControllerRepresentable {
-    @State private var isDoubleTapped: Bool = false
-    
+    @Binding var isDoubleTapped: Bool
+
     public func makeUIViewController(context: Context) -> CameraView {
-        let cameraView = CameraView()
-                
+        let cameraView = CameraView(isDoubleTapped: self.$isDoubleTapped)
+
+        // Create a coordinator
+        let coordinator = Coordinator(isDoubleTapped: $isDoubleTapped)
+
         // Add gesture recognizer for double tap
         let tapGesture = UITapGestureRecognizer(
-            target: context.coordinator,
+            target: coordinator,
             action: #selector(Coordinator.handleDoubleTap)
         )
-                
         tapGesture.numberOfTapsRequired = 2
         cameraView.view.addGestureRecognizer(tapGesture)
-                
+
         return cameraView
     }
-    
+
     public func makeCoordinator() -> Coordinator {
         Coordinator(isDoubleTapped: $isDoubleTapped)
     }
-    
+
     public func updateUIViewController(_ uiViewController: CameraView, context: Context) {
         uiViewController.isDoubleTapped = isDoubleTapped
-        
     }
-    
+
     class Coordinator: NSObject {
         @Binding var isDoubleTapped: Bool
-            
+
         init(isDoubleTapped: Binding<Bool>) {
             _isDoubleTapped = isDoubleTapped
         }
-            
+
         @objc func handleDoubleTap() {
             isDoubleTapped.toggle()
         }
     }
 }
+
 
 
 extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -395,5 +408,6 @@ extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         
         self.detectFaces(image: frame)
+        self.detectTraffic(image: frame)
     }
 }
