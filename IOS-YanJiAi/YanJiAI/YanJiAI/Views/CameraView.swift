@@ -39,8 +39,8 @@ class CameraView: UIViewController {
     private var sentimentModel: SentimentModel!
     private var trafficModel: TrafficModel!
     
-    private let captureSession = AVCaptureSession()
-    private let videoDataOutput = AVCaptureVideoDataOutput()
+    public let captureSession = AVCaptureSession()
+    public let videoDataOutput = AVCaptureVideoDataOutput()
     
     private var drawings: [CAShapeLayer] = []
     private var isSentimentAnalysisAvailable: Bool = false
