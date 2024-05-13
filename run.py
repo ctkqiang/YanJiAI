@@ -144,7 +144,7 @@ class 眼迹AI:
             # 在帧中检测人脸
             脸部 = self.眼部分类器.detectMultiScale(灰度)
 
-            颜色 = (255, 0, 128)
+            颜色 = (255, 0, 255)
 
             for fx, fy, fw, fh in 脸部:
                 # 绘制圆形区域以表示脸部
