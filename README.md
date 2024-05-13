@@ -48,11 +48,6 @@ unable to get local issuer certificate
 python3 run.py
 ```
 
-### 测试 
-```bash
-python3 -m unittest tests/test.py
-```
-
 ### 个人捐赠支持
 如果您认为该项目对您有所帮助，并且愿意个人捐赠以支持其持续发展和维护，🥰我非常感激您的慷慨。
 您的捐赠将帮助我继续改进和添加新功能到该项目中。 通过财务捐赠，您将有助于确保该项目保持免
