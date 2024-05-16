@@ -33,7 +33,8 @@ import CoreMedia
 import Photos
 #endif
 
-class CameraView: UIViewController {
+class CameraView: UIViewController 
+{
     @Binding var isDoubleTapped: Bool
     
     private var sentimentModel: SentimentModel!
@@ -50,16 +51,19 @@ class CameraView: UIViewController {
     
     private lazy var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
     
-    public init(isDoubleTapped: Binding<Bool>) {
+    public init(isDoubleTapped: Binding<Bool>) 
+    {
         _isDoubleTapped = isDoubleTapped
         super.init(nibName: nil, bundle: nil)
     }
         
-    required public init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) 
+    {
         fatalError("未实现init(coder:)")
     }
     
-    public override func viewDidLoad() {
+    public override func viewDidLoad() 
+    {
         super.viewDidLoad()
         
         self.loadSentimentModel()
@@ -73,25 +77,30 @@ class CameraView: UIViewController {
         self.captureSession.startRunning()
     }
     
-    public override func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() 
+    {
         super.viewDidLayoutSubviews()
         
         self.previewLayer.frame = view.frame
     }
     
-    private func reloadCameraInput() {
+    private func reloadCameraInput() 
+    {
           
-        if let currentInput = self.captureSession.inputs.first {
+        if let currentInput = self.captureSession.inputs.first 
+        {
             self.captureSession.removeInput(currentInput)
         }
             
         self.addCameraInput()
     }
     
-    private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation]) {
+    private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation]) 
+    {
         self.clearDrawings()
         
-        for observation in results {
+        for observation in results 
+        {
             NSLog(results as! String? ?? "nil")
             
             // 获取边界框坐标
@@ -118,15 +127,20 @@ class CameraView: UIViewController {
         }
     }
     
-    private func detectTraffic(image: CVPixelBuffer) {
-        guard let model = try? VNCoreMLModel(for: self.trafficModel.model) else {
+    private func detectTraffic(image: CVPixelBuffer) 
+    {
+        guard let model = try? VNCoreMLModel(for: self.trafficModel.model) else 
+        {
             fatalError("创建 VNCoreMLModel 失败")
         }
 
-        let request = VNCoreMLRequest(model: model) { request, error in
-            guard let results = request.results as? [VNRecognizedObjectObservation] else { return }
+        let request = VNCoreMLRequest(model: model) 
+        { request, error in
+            guard let results = request.results as? [VNRecognizedObjectObservation] else 
+            { return }
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async 
+            {
                 self.handleObjectDetectionResults(results)
                 self.showToast(message: "Traffic Found")
             }
@@ -134,33 +148,43 @@ class CameraView: UIViewController {
 
         let handler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
 
-        do {
+        do 
+        {
             try handler.perform([request])
-        } catch {
+        } 
+        catch
+        {
             NSLog("执行目标检测时出错: \(error)")
         }
     }
     
-    private func loadTrafficModel() {
-        guard let modelURL = Bundle.main.url(forResource: "TrafficModel", withExtension: "mlmodelc") else {
+    private func loadTrafficModel() 
+    {
+        guard let modelURL = Bundle.main.url(forResource: "TrafficModel", withExtension: "mlmodelc") else 
+        {
             fatalError("无法加载 TrafficnModel.mlmodelc")
         }
 
-        do {
+        do 
+        {
             self.trafficModel = try TrafficModel(contentsOf: modelURL)
-        } catch {
+        } 
+        catch {
             fatalError("无法加载模型: \(error.localizedDescription)")
         }
     }
     
     
-    public func toggleCamera() {
+    public func toggleCamera() 
+    {
         self.isDoubleTapped.toggle()
         self.reloadCameraInput()
     }
     
-    private func analyzeSentiment(observedFaces: [VNFaceObservation]) {
-        guard let prediction = try? self.sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else {
+    private func analyzeSentiment(observedFaces: [VNFaceObservation]) 
+    {
+        guard let prediction = try? self.sentimentModel.model.prediction(from: observedFaces as! MLFeatureProvider) else 
+        {
             NSLog("情感预测失败")
             return
         }
@@ -170,24 +194,35 @@ class CameraView: UIViewController {
         NSLog("情感: \(sentiment)")
     }
     
-    private func loadSentimentModel() {
-        guard let modelURL = Bundle.main.url(forResource: "SentimentModel", withExtension: "mlmodelc") else {
+    private func loadSentimentModel() 
+    {
+        guard let modelURL = Bundle.main.url(forResource: "SentimentModel", withExtension: "mlmodelc") else 
+        {
             fatalError("无法加载 SentimentModel.mlmodelc")
         }
             
-        do {
+        do 
+        {
             self.sentimentModel = try SentimentModel(contentsOf: modelURL)
-        } catch {
+        } 
+        catch
+        {
             fatalError("无法加载模型: \(error.localizedDescription)")
         }
     }
     
-    private func addCameraInput() {
+    private func addCameraInput() 
+    {
         guard let device = AVCaptureDevice.DiscoverySession(
-            deviceTypes: [.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera],
+            deviceTypes: [
+                .builtInTrueDepthCamera, 
+                .builtInDualCamera,
+                .builtInWideAngleCamera
+            ],
             mediaType: .video,
             position: (self.isDoubleTapped) ? .back : .front
-        ).devices.first else {
+        ).devices.first else
+        {
             fatalError("摄像头启动失败了。")
         }
         
@@ -196,12 +231,14 @@ class CameraView: UIViewController {
         self.captureSession.addInput(cameraInput)
     }
     
-    private func showCameraInput() {
+    private func showCameraInput() 
+    {
         self.previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
     }
     
-    private func getCameraFrame() {
+    private func getCameraFrame() 
+    {
         self.videoDataOutput.videoSettings = [
             (kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(value:kCVPixelFormatType_32BGRA)
         ] as [String: Any]
@@ -211,14 +248,16 @@ class CameraView: UIViewController {
         
         self.captureSession.addOutput(videoDataOutput)
         
-        guard let connection = videoDataOutput.connection(with: .video), connection.isVideoOrientationSupported else {
+        guard let connection = videoDataOutput.connection(with: .video), connection.isVideoOrientationSupported else 
+        {
             return
         }
         
         connection.videoOrientation = .portrait
     }
     
-    private func startRecording() {
+    private func startRecording() 
+    {
         guard !isRecording else { return }
         
         let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -229,25 +268,32 @@ class CameraView: UIViewController {
         self.isRecording = true
     }
     
-    private func stopRecording() {
+    private func stopRecording() 
+    {
         guard isRecording else { return }
             
         self.movieOutput.stopRecording()
         self.isRecording = false
     }
     
-    private func randomString(length: Int) -> String {
+    private func randomString(length: Int) -> String 
+    {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         
         return String((0..<length).map { _ in letters.randomElement()! })
     }
 
-    private func detectFaces(image: CVPixelBuffer) {
-        let faceDetectedRequest = VNDetectFaceLandmarksRequest(completionHandler: {vnRequest, err in
-            DispatchQueue.main.async {
+    private func detectFaces(image: CVPixelBuffer) 
+    {
+        let faceDetectedRequest = VNDetectFaceLandmarksRequest(completionHandler:
+        {
+            vnRequest, err in
+            DispatchQueue.main.async 
+            {
                 if let results = vnRequest.results as? [VNFaceObservation], results.count > 0 {
                     
-                    if self.isSentimentAnalysisAvailable {
+                    if self.isSentimentAnalysisAvailable 
+                    {
                         self.analyzeSentiment(observedFaces: results)
                     }
                     
@@ -256,7 +302,9 @@ class CameraView: UIViewController {
                     
                     NSLog("✅ 检测到 \(results.count) 张人脸")
                     self.showToast(message: "✅ 检测到 \(results.count) 张人脸")
-                } else {
+                } 
+                else
+                {
                     NSLog("❌ 未检测到人脸")
                     self.showToast(message: "❌ 未检测到人脸")
                 }
@@ -270,7 +318,8 @@ class CameraView: UIViewController {
     }
     
     
-    private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) {
+    private func handleFaceDetectionResults(observedFaces: [VNFaceObservation]) 
+    {
         self.clearDrawings()
         
         let faceBoundingsBoxes: [CAShapeLayer] = observedFaces.map({ (observedFace: VNFaceObservation) ->
@@ -307,22 +356,26 @@ class CameraView: UIViewController {
         })
         
         
-        faceBoundingsBoxes.forEach { faceBoundingBox in
+        faceBoundingsBoxes.forEach 
+        {
+            faceBoundingBox in
+            
             view.layer.addSublayer(faceBoundingBox)
             
             self.drawings = faceBoundingsBoxes
         }
     }
         
-    private func clearDrawings() {
-        self.drawings.forEach({ drawing in
-            drawing.removeFromSuperlayer()
-        })
+    private func clearDrawings() 
+    {
+        self.drawings.forEach({ drawing in drawing.removeFromSuperlayer() })
     }
     
-    public func showToast(message: String) {
+    public func showToast(message: String) 
+    {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first else { return }
+              let window = windowScene.windows.first else 
+        { return }
         
         let label = UILabel()
         
@@ -350,16 +403,22 @@ class CameraView: UIViewController {
         
         window.addSubview(label)
         
-        UIView.animate(withDuration: 2.0, delay: 1.0, options: .curveEaseOut, animations: {
+        UIView.animate(
+            withDuration: 2.0,
+            delay: 1.0,
+            options: .curveEaseOut,
+            animations: {
             label.alpha = 0.0
         }, completion: { _ in label.removeFromSuperview() })
     }
 }
 
-struct CameraViewWrapper: UIViewControllerRepresentable {
+struct CameraViewWrapper: UIViewControllerRepresentable 
+{
     @Binding var isDoubleTapped: Bool
 
-    public func makeUIViewController(context: Context) -> CameraView {
+    public func makeUIViewController(context: Context) -> CameraView 
+    {
         let cameraView = CameraView(isDoubleTapped: self.$isDoubleTapped)
 
         // Create a coordinator
@@ -370,28 +429,34 @@ struct CameraViewWrapper: UIViewControllerRepresentable {
             target: coordinator,
             action: #selector(Coordinator.handleDoubleTap)
         )
+        
         tapGesture.numberOfTapsRequired = 2
         cameraView.view.addGestureRecognizer(tapGesture)
 
         return cameraView
     }
 
-    public func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator 
+    {
         Coordinator(isDoubleTapped: $isDoubleTapped)
     }
 
-    public func updateUIViewController(_ uiViewController: CameraView, context: Context) {
+    public func updateUIViewController(_ uiViewController: CameraView, context: Context) 
+    {
         uiViewController.isDoubleTapped = isDoubleTapped
     }
 
-    class Coordinator: NSObject {
+    class Coordinator: NSObject 
+    {
         @Binding var isDoubleTapped: Bool
 
-        init(isDoubleTapped: Binding<Bool>) {
+        init(isDoubleTapped: Binding<Bool>) 
+        {
             _isDoubleTapped = isDoubleTapped
         }
 
-        @objc func handleDoubleTap() {
+        @objc func handleDoubleTap() 
+        {
             isDoubleTapped.toggle()
         }
     }

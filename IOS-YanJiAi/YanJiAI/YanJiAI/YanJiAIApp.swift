@@ -8,9 +8,12 @@
 import SwiftUI
 
 @main
-struct YanJiAIApp: App {
-    var body: some Scene {
-        WindowGroup {
+struct YanJiAIApp: App 
+{
+    var body: some Scene 
+    {
+        WindowGroup 
+        {
             ContentView()
         }
     }
