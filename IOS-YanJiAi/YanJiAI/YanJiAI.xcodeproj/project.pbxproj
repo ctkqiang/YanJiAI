@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A00381C2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */; };
+		1A00381D2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */; };
+		1A00381E2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */; };
 		1A293DE22BF22B9000381D5F /* YanJiAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A293DE12BF22B9000381D5F /* YanJiAIApp.swift */; };
 		1A293DE42BF22B9000381D5F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A293DE32BF22B9000381D5F /* ContentView.swift */; };
 		1A293DE62BF22B9300381D5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A293DE52BF22B9300381D5F /* Assets.xcassets */; };
@@ -41,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ObjectDetection.mlmodel; sourceTree = SOURCE_ROOT; };
 		1A293DDE2BF22B9000381D5F /* YanJiAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanJiAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A293DE12BF22B9000381D5F /* YanJiAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YanJiAIApp.swift; sourceTree = "<group>"; };
 		1A293DE32BF22B9000381D5F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 				1A293DFE2BF22B9300381D5F /* YanJiAIUITestsLaunchTests.swift */,
 				1A293E0D2BF231EC00381D5F /* SentimentModel.mlmodel */,
 				1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */,
+				1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */,
 			);
 			path = YanJiAIUITests;
 			sourceTree = "<group>";
@@ -279,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A293E0C2BF22BAA00381D5F /* CameraView.swift in Sources */,
+				1A00381C2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
 				1A293DE42BF22B9000381D5F /* ContentView.swift in Sources */,
 				1A293E0E2BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
 				1A5F0B172BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
@@ -291,6 +297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A293E0F2BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
+				1A00381D2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
 				1A5F0B182BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
 				1A293DF32BF22B9300381D5F /* YanJiAITests.swift in Sources */,
 			);
@@ -301,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A5F0B192BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
+				1A00381E2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
 				1A293E102BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
 				1A293DFF2BF22B9300381D5F /* YanJiAIUITestsLaunchTests.swift in Sources */,
 				1A293DFD2BF22B9300381D5F /* YanJiAIUITests.swift in Sources */,

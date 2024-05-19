@@ -39,6 +39,7 @@ class CameraView: UIViewController
     
     private var sentimentModel: SentimentModel!
     private var trafficModel: TrafficModel!
+    private var objectDetection: ObjectDetection!
     
     public let captureSession = AVCaptureSession()
     public let videoDataOutput = AVCaptureVideoDataOutput()
@@ -93,38 +94,6 @@ class CameraView: UIViewController
         }
             
         self.addCameraInput()
-    }
-    
-    private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation]) 
-    {
-        self.clearDrawings()
-        
-        for observation in results 
-        {
-            NSLog(results as! String? ?? "nil")
-            
-            // 获取边界框坐标
-            let boundingBox = observation.boundingBox
-            let boundingBoxOnScreen = self.previewLayer.layerRectConverted(fromMetadataOutputRect: boundingBox)
-
-            // 获取标签和置信度
-            let label = observation.labels.first?.identifier ?? "未知"
-            let confidence = observation.labels.first?.confidence ?? 0.0
-            let labelText = "\(label) (\(String(format: "%.2f", confidence * 100))%)"
-
-            // 绘制带标签的边界框
-            let boundingBoxLayer = CAShapeLayer()
-            let textLayer = CATextLayer()
-            textLayer.string = labelText
-            
-            let boundingBoxPath = UIBezierPath(rect: boundingBoxOnScreen)
-            boundingBoxLayer.path = boundingBoxPath.cgPath
-            
-            self.view.layer.addSublayer(boundingBoxLayer)
-            boundingBoxLayer.addSublayer(textLayer)
-
-            self.drawings.append(boundingBoxLayer)
-        }
     }
     
     private func detectTraffic(image: CVPixelBuffer) 
@@ -366,12 +335,12 @@ class CameraView: UIViewController
         }
     }
         
-    private func clearDrawings() 
+    private func clearDrawings() -> Void
     {
         self.drawings.forEach({ drawing in drawing.removeFromSuperlayer() })
     }
     
-    public func showToast(message: String) 
+    public func showToast(message: String) -> Void
     {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else 
@@ -410,6 +379,83 @@ class CameraView: UIViewController
             animations: {
             label.alpha = 0.0
         }, completion: { _ in label.removeFromSuperview() })
+    }
+    
+    public func loadObjectDetection() -> Void
+    {
+        guard let modelURL = Bundle.main.url(forResource: "ObjectDetection", withExtension: "mlmodelc") else 
+        {
+            fatalError("无法加载 ObjectDetection.mlmodelc")
+        }
+        
+        do 
+        {
+            let model = try MLModel(contentsOf: modelURL)
+            self.objectDetection = ObjectDetection(model: model)
+        } 
+        catch
+        {
+            fatalError("Failed to load model: \(error.localizedDescription)")
+        }
+    }
+    
+    public func objectRecognition(image: CVPixelBuffer) -> Void
+    {
+        guard let model = try? VNCoreMLModel(for: self.objectDetection.model) else
+        {
+            fatalError("Failed to create VNCoreMLModel")
+        }
+        
+        let request = VNCoreMLRequest(model: model) 
+        { request, error in
+            guard let results = request.results as? [VNRecognizedObjectObservation] else { return }
+                
+            DispatchQueue.main.async
+            {
+                self.handleObjectDetectionResults(results)
+            }
+        }
+        
+        let handler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
+        
+        do
+        {
+            try handler.perform([request])
+        } 
+        catch
+        {
+            NSLog("Error performing object detection: \(error)")
+        }
+    }
+    
+    private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation])
+    {
+        self.clearDrawings()
+        
+        for observation in results
+        {
+            // 获取边界框坐标
+            let boundingBox = observation.boundingBox
+            let boundingBoxOnScreen = self.previewLayer.layerRectConverted(fromMetadataOutputRect: boundingBox)
+
+            // 获取标签和置信度
+            let label = observation.labels.first?.identifier ?? "未知"
+            let confidence = observation.labels.first?.confidence ?? 0.0
+            let labelText = "\(label) (\(String(format: "%.2f", confidence * 100))%)"
+
+            // 绘制带标签的边界框
+            let boundingBoxLayer = CAShapeLayer()
+            let textLayer = CATextLayer()
+            textLayer.string = labelText
+            
+            let boundingBoxPath = UIBezierPath(rect: boundingBoxOnScreen)
+            boundingBoxLayer.path = boundingBoxPath.cgPath
+            
+            self.view.layer.addSublayer(boundingBoxLayer)
+            boundingBoxLayer.addSublayer(textLayer)
+
+            self.drawings.append(boundingBoxLayer)
+        }
     }
 }
 
@@ -462,17 +508,20 @@ struct CameraViewWrapper: UIViewControllerRepresentable
     }
 }
 
-
-
-extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate {
-    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate 
+{
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) 
+    {
         
-        guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+        guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else 
+        {
             NSLog("样本缓冲为空")
             return
         }
         
         self.detectFaces(image: frame)
         self.detectTraffic(image: frame)
+        
+        // self.objectRecognition(image: frame)
     }
 }
