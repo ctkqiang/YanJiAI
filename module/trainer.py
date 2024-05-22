@@ -17,7 +17,9 @@ class Trainer:
         super(Trainer, self).__init__()
 
         self.文件名称: str = 文件名称
+
         assert tf.__version__.startswith("2"), "This script requires TensorFlow 2.x."
+
         self.fill_mode: str = "nearest"
 
     def check_images(self, directory: str) -> None:
@@ -30,8 +32,10 @@ class Trainer:
                     print(f"Bad file: {filename}")  # Print out the names of corrupt files
 
     def 运行(self, 数据: str, 测试数据: str) -> None:
+
         if not os.path.exists(数据):
             raise FileNotFoundError(f"训练数据目录 '{数据}' 不存在.")
+        
         if not os.path.exists(测试数据):
             raise FileNotFoundError(f"测试数据目录 '{测试数据}' 不存在.")
 
