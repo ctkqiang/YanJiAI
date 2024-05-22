@@ -144,7 +144,7 @@ class 眼迹AI:
             # 在帧中检测人脸
             脸部 = self.眼部分类器.detectMultiScale(灰度)
 
-            颜色 = (255, 0, 255)
+            颜色 = (255, 255, 255)
 
             for fx, fy, fw, fh in 脸部:
                 # 绘制圆形区域以表示脸部
@@ -423,7 +423,7 @@ class 眼迹AI:
             cv2.imshow(self.名称, 帧)
 
             # 如果按下 'q' 键，则退出循环
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            if cv2.waitKey(1) & 0xFF == ord("q") or ord("z"):
                 self.记录信息()
                 exit(0)
                 break

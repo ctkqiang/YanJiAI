@@ -496,12 +496,12 @@ struct CameraViewWrapper: UIViewControllerRepresentable
     {
         @Binding var isDoubleTapped: Bool
 
-        init(isDoubleTapped: Binding<Bool>) 
+        init(isDoubleTapped: Binding<Bool>)
         {
             _isDoubleTapped = isDoubleTapped
         }
 
-        @objc func handleDoubleTap() 
+        @objc func handleDoubleTap() -> Void
         {
             isDoubleTapped.toggle()
         }
