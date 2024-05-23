@@ -309,7 +309,7 @@ class 眼迹AI:
                     lEyes: list = 结果[0]["region"]["left_eye"]
                     rEyes: list = 结果[0]["region"]["right_eye"]
 
-                    if lEyes is None and rEyes is None:
+                    if lEyes is None and rEyes is None or xRegion == 0 and yRegion == 0:
                         print(pure_red + "[警告：请保持注意力集中在前方!!!] ")
                         self.warning(帧, "WARNING: PLEASE KEEP YOU EYE ON THE FRONT!!!", 1, (0, 0, 255), 2)
 
