@@ -442,7 +442,7 @@ class 眼迹AI:
             cv2.imshow(self.名称, 帧)
 
             # 如果按下 'q' 键，则退出循环
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            if cv2.waitKey(1) & 0xFF == ord("q") or 0xFF == ord("z"):
                 exit(0)
                 break
 
