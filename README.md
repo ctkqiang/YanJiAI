@@ -57,6 +57,20 @@ python3 run.py
 <br />
 <img src="assets/截图/截屏2024-05-23 下午5.20.57.png" style="height: auto !important; width: auto !important;">
 
+<br />
+当应用程序运行时，终端将返回以下信息：
+
+当用户眼睛专注时：
+```bash
+眼迹AI |> [19:00:07] 性别: (男性: 99.84%) | 情绪: 中性 91.0% | [左眼: 无, 右眼: 无] X: 589, Y: 212, W: 306, H: 306
+眼迹AI |> [19:00:07] 性别: (男性: 99.84%) | 情绪: 中性 91.0% | [左眼: 无, 右眼: 无] X: 589, Y: 212, W: 306, H: 306
+眼迹AI |> [19:00:07] 性别: (男性: 92.46%) | 情绪: 中性 93.0% | [左眼: 无, 右眼: 无] X: 574, Y: 219, W: 302, H: 302
+```
+
+当用户眼睛没有看向前方时：
+```bash
+[警告：请保持注意力集中在前方!!!] 
+```
 
 ### 个人捐赠支持
 如果您认为该项目对您有所帮助，并且愿意个人捐赠以支持其持续发展和维护，🥰我非常感激您的慷慨。
@@ -74,8 +88,6 @@ python3 run.py
 
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F5VCZJU)
-
-
 
 ## 爱心捐款
 <a href="https://qr.alipay.com/fkx19369scgxdrkv8mxso92"><img src="https://img.shields.io/badge/alipay-00A1E9?style=for-the-badge&logo=alipay&logoColor=white"></a> <a href="https://ko-fi.com/F1F5VCZJU"><img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white"></a> <a href="https://www.paypal.com/paypalme/ctkqiang"><img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white"></a> <a href="https://donate.stripe.com/00gg2nefu6TK1LqeUY"><img src="https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white"></a>
