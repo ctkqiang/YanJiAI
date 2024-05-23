@@ -3,4 +3,5 @@
 *.bin
 *.exe
 *.pyc
-
+*.onx
+*.pth

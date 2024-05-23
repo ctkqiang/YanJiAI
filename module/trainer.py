@@ -51,6 +51,8 @@ class 训练器:
     
 
     def 检查图片(self, 目录: str) -> None:
+        print("\033[0;93m" + "检查图片...")  
+
         for filename in os.listdir(目录):
             
             if filename.endswith((".png", ".jpg", ".jpeg")):
@@ -112,7 +114,7 @@ class 训练器:
             
             epoch_loss = running_loss / len(train_loader.dataset)
 
-            print("\033[0;93m" + f"轮 {epoch + 1}/{轮数}, 损失: {epoch_loss:.4f}")
+            print("\033[0;93m" + f"=轮 {epoch + 1}/{轮数}, =损失: {epoch_loss:.4f}")
 
     def 保存pytorch模型(self, 路径="model.pth"):
         torch.save(self.model.state_dict(), 路径)
@@ -121,13 +123,13 @@ class 训练器:
         model = onnx.load(onnx_model_path)
 
         for node in model.graph.node:
-            print("\033[0;93m" + f'节点名称: {node.name}')
+            print("\033[0;93m" + f'=节点名称: {node.name}')
             
         for input in model.graph.input:
-            print("\033[0;93m" + f'输入名称: {input.name}')
+            print("\033[0;93m" + f'=输入名称: {input.name}')
             
         for output in model.graph.output:
-            print("\033[0;93m" + f'输出名称: {output.name}')
+            print("\033[0;93m" + f'=输出名称: {output.name}')
 
 
     def 转换为keras(self, pytorch_model_path, keras_model_path):
