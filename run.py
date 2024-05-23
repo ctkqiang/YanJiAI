@@ -2,6 +2,7 @@
 try:
     import os
     import cv2
+    import time
     import torch
     import numpy as np
     from datetime import datetime
@@ -308,6 +309,10 @@ class 眼迹AI:
                     lEyes: list = 结果[0]["region"]["left_eye"]
                     rEyes: list = 结果[0]["region"]["right_eye"]
 
+                    if lEyes is None and rEyes is None:
+                        print(pure_red + "[警告：请保持注意力集中在前方!!!] ")
+                        self.warning(帧, "WARNING: PLEASE KEEP YOU EYE ON THE FRONT!!!", 1, (0, 0, 255), 2)
+
                     # 在眼睛周围绘制一个矩形
                     # cv2.rectangle(帧, (ex, ey), (ex + ew, ey + eh), 颜色, thickness=3)
 
@@ -444,6 +449,20 @@ class 眼迹AI:
         # 释放视频捕获
         self.捕获.release()
         cv2.destroyAllWindows()
+
+    def warning(self, frame, text, font_scale, color, thickness):
+        # 定义字体
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        # 获取文本大小
+        text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
+        # 计算文本在帧底部的位置
+        text_x = int((frame.shape[1] - text_size[0]) / 2)
+        text_y = frame.shape[0] - 20  # 根据需要调整此值以设置距离帧底部的距离
+
+        # 将文本放置在帧底部
+        cv2.putText(frame, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
+
+
 
 if __name__ == "__main__":
     yanjiai: object = 眼迹AI()
