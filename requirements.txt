@@ -2,3 +2,7 @@ opencv-python
 numpy
 Pillow
 deepface
+torch
+tensorflow
+onx
+onnx2keras  

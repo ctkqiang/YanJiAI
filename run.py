@@ -2,10 +2,12 @@
 try:
     import os
     import cv2
+    import torch
     import numpy as np
     from datetime import datetime
     from PIL import ImageFont, ImageDraw, Image
     from module.colors import *
+    from module.trainer import *
     from deepface import DeepFace
 except ImportError:
     raise ImportError("🥹无法安装配件")
@@ -67,6 +69,9 @@ class 眼迹AI:
         self.年龄模型: str = "assets/training_bin/age_net.caffemodel"
         self.性别配置: str = "assets/training_bin/gender_deploy.prototxt"
         self.性别模型: str = "assets/training_bin/gender_net.caffemodel"
+        
+        self.物体检测模型名称: str = "object_detection_model"
+            
 
     def 记录信息(self, 信息: str) -> None:
         """
@@ -111,8 +116,17 @@ class 眼迹AI:
         
         设备名称 = self.捕获.get(cv2.CAP_PROP_POS_MSEC)
 
+        if not os.path.exists(f"{self.物体检测模型名称}.pth"):
+            _训练器_ = 训练器(文件名称=self.物体检测模型名称)
+            _训练器_.运行(训练数据="assets/train", 测试数据="assets/test")
+        else:
+            pass
+
+        self.物体检测模型 = torch.load(f"{self.物体检测模型名称}.pth")
+
         self.可用摄像头.append((self.索引, 设备名称))
         self.索引 += 1
+        
 
         for self.索引, 设备名称 in self.可用摄像头:
             self.记录信息(信息= f"{self.捕获.__str__()} | 摄像头 {self.索引}: {设备名称}")
@@ -423,8 +437,7 @@ class 眼迹AI:
             cv2.imshow(self.名称, 帧)
 
             # 如果按下 'q' 键，则退出循环
-            if cv2.waitKey(1) & 0xFF == ord("q") or ord("z"):
-                self.记录信息()
+            if cv2.waitKey(1) & 0xFF == ord("q"):
                 exit(0)
                 break
 
