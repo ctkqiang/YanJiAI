@@ -54,6 +54,8 @@ python3 run.py
 <img src="assets/截图/截屏2024-05-23 下午4.01.13.png" style="height: auto !important; width: auto !important;"> 
 <br />
 <img src="assets/截图/截屏2024-05-23 下午4.01.24.png" style="height: auto !important; width: auto !important;">
+<br />
+<img src="assets/截图/截屏2024-05-23 下午5.20.57.png" style="height: auto !important; width: auto !important;">
 
 
 ### 个人捐赠支持
