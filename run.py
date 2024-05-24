@@ -127,7 +127,6 @@ class 眼迹AI:
 
         self.可用摄像头.append((self.索引, 设备名称))
         self.索引 += 1
-        
 
         for self.索引, 设备名称 in self.可用摄像头:
             self.记录信息(信息= f"{self.捕获.__str__()} | 摄像头 {self.索引}: {设备名称}")
@@ -162,22 +161,13 @@ class 眼迹AI:
             颜色 = (255, 255, 255)
 
             for fx, fy, fw, fh in 脸部:
-                # 绘制圆形区域以表示脸部
-                # 绘制具有圆角的矩形
+                # 绘制圆形区域以表示脸部 | 绘制具有圆角的矩形
                 半径 = int(min(fw, fh) / 2)
 
-                cv2.rectangle(
-                    帧,
-                    (int(fx), int(fy)),
-                    (int(fx + fw), int(fy + fh)),
-                    颜色,
-                    thickness=2,
-                )
+                cv2.rectangle(帧, (int(fx), int(fy)), (int(fx + fw), int(fy + fh)), 颜色, thickness=2)
 
                 # 为人脸检测准备输入图像
-                图像blob = cv2.dnn.blobFromImage(
-                    帧, 1.0, (300, 300), [104, 117, 123], False, False
-                )
+                图像blob = cv2.dnn.blobFromImage(帧, 1.0, (300, 300), [104, 117, 123], False, False)
 
                 # 执行人脸检测
                 人脸网络.setInput(图像blob)
@@ -190,9 +180,7 @@ class 眼迹AI:
                     # 根据置信度阈值过滤掉弱检测结果
                     if 置信度 > 0.5:
                         # 提取边界框坐标
-                        边界框  = 检测结果[0, 0, i, 3:7] * np.array(
-                            [帧.shape[1], 帧.shape[0], 帧.shape[1], 帧.shape[0]]
-                        )
+                        边界框  = 检测结果[0, 0, i, 3:7] * np.array([帧.shape[1], 帧.shape[0], 帧.shape[1], 帧.shape[0]])
 
                         (起始X, 起始Y, 结束X, 结束Y) = 边界框.astype("int")
 
@@ -224,12 +212,11 @@ class 眼迹AI:
                         # 执行性别分类
                         性别网络.setInput(人脸blob)
                         性别预测 = 性别网络.forward()
+
                         性别 = "Male" if 性别预测[0][0] > 性别预测[0][1] else "Female"
 
                         # 在帧上叠加性别标签
-                        性别标签 = "{}: {:.2f}%".format(
-                            性别, max(性别预测[0][0], 性别预测[0][1]) * 100
-                        )
+                        性别标签 = "{}: {:.2f}%".format(性别, max(性别预测[0][0], 性别预测[0][1]) * 100)
 
                         cv2.putText(
                             帧,
@@ -256,7 +243,6 @@ class 眼迹AI:
                         )
                     else: 
                         continue
-\
 
             # 遍历每个检测到的眼睛
             for ex, ey, ew, eh in 眼睛:
@@ -277,20 +263,23 @@ class 眼迹AI:
 
                     # 根据眼睛中心点位置判断朝向
                     if self.显示文字:
+                        
                         if 眼睛中心_x < 帧.shape[1] // 3:
                             方向文本 = "向左看"  # 如果眼睛中心在帧的左侧
                             颜色 = (255, 0, 0)  # 红色
+
                         elif 眼睛中心_x > 2 * 帧.shape[1] // 3:
                             方向文本 = "向右看"  # 如果眼睛中心在帧的右侧
                             颜色 = (255, 0, 0)  # 蓝色
+
                         else:
                             方向文本 = "正视"  # 如果眼睛中心在帧的中间部分
                             颜色 = (0, 255, 0)  # 绿色
+
                     else:
                         方向文本 = ""  # default
 
-                    # 用户情绪
-                    # 在人脸感兴趣区域执行情绪分析
+                    # 用户情绪《在人脸感兴趣区域执行情绪分析》
                     结果 = DeepFace.analyze(
                         face_region_of_interest,
                         actions=["emotion"],
@@ -435,7 +424,7 @@ class 眼迹AI:
 
                             self.记录信息(信息="眨眼")
 
-                    if self.显示文字:
+                    if self.显示文字: 
                         self.记录信息(信息=方向文本)
 
             # 显示帧
@@ -453,15 +442,16 @@ class 眼迹AI:
     def warning(self, frame, text, font_scale, color, thickness):
         # 定义字体
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
         # 获取文本大小
         text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
+        
         # 计算文本在帧底部的位置
         text_x = int((frame.shape[1] - text_size[0]) / 2)
         text_y = frame.shape[0] - 20  # 根据需要调整此值以设置距离帧底部的距离
 
         # 将文本放置在帧底部
         cv2.putText(frame, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
-
 
 
 if __name__ == "__main__":
