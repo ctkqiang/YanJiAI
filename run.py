@@ -5,11 +5,13 @@ try:
     import time
     import torch
     import numpy as np
+    import torchvision.transforms as transforms
     from datetime import datetime
     from PIL import ImageFont, ImageDraw, Image
     from module.colors import *
     from module.trainer import *
     from deepface import DeepFace
+    from torchvision.models.detection import fasterrcnn_resnet50_fpn
 except ImportError:
     raise ImportError("🥹无法安装配件")
 finally:
@@ -72,6 +74,12 @@ class 眼迹AI:
         self.性别模型: str = "assets/training_bin/gender_net.caffemodel"
         
         self.物体检测模型名称: str = "object_detection_model"
+
+        """
+        self.object_detection_model = fasterrcnn_resnet50_fpn(pretrained=False)
+        self.object_detection_model.load_state_dict(torch.load("{}.pth".format(self.物体检测模型名称)))
+        self.object_detection_model.eval()
+        """
             
 
     def 记录信息(self, 信息: str) -> None:
@@ -244,6 +252,24 @@ class 眼迹AI:
                     else: 
                         continue
 
+            """
+
+            # Convert frame to the format expected by the object detection model
+            input_image = transforms.ToTensor()(帧).unsqueeze(0)
+
+            # Perform object detection
+            with torch.no_grad():
+                predictions = self.object_detection_model(input_image)
+
+            # Process the predictions and draw bounding boxes on the frame
+            for box in predictions[0]['boxes']:
+                box = [int(coord) for coord in box]
+                cv2.rectangle(帧, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
+
+            cv2.imshow(self.名称, 帧)
+
+            """
+
             # 遍历每个检测到的眼睛
             for ex, ey, ew, eh in 眼睛:
                 # 计算眼睛面积
@@ -412,6 +438,7 @@ class 眼迹AI:
 
                     if self.初始帧数 is None:
                         self.初始帧数 = 眨眼距离
+
                     else:
                         if 眨眼距离 < self.初始帧数 * 0.8:
 
@@ -431,7 +458,7 @@ class 眼迹AI:
             cv2.imshow(self.名称, 帧)
 
             # 如果按下 'q' 键，则退出循环
-            if cv2.waitKey(1) & 0xFF == ord("q") or 0xFF == ord("z"):
+            if cv2.waitKey(1) & 0xFF in [ ord("q"), ord("z") ]:
                 exit(0)
                 break
 
