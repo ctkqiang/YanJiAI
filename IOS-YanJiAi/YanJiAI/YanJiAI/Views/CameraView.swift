@@ -573,7 +573,7 @@ extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) 
     {
         
-        let yolo :Bool = true
+        let yolo :Bool = false
         
         guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else 
         {
