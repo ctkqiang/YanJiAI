@@ -24,6 +24,13 @@
 		1A5F0B172BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */; };
 		1A5F0B182BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */; };
 		1A5F0B192BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */; };
+		1AA8183D2C09F045001A0537 /* ObjectDetections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8183C2C09F045001A0537 /* ObjectDetections.swift */; };
+		1AA8183F2C09F398001A0537 /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8183E2C09F398001A0537 /* TinyYOLO.mlmodel */; };
+		1AA818402C09F398001A0537 /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8183E2C09F398001A0537 /* TinyYOLO.mlmodel */; };
+		1AA818412C09F398001A0537 /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8183E2C09F398001A0537 /* TinyYOLO.mlmodel */; };
+		1AA818432C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA818422C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel */; };
+		1AA818442C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA818422C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel */; };
+		1AA818452C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1AA818422C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +65,9 @@
 		1A293E0B2BF22BAA00381D5F /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		1A293E0D2BF231EC00381D5F /* SentimentModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SentimentModel.mlmodel; sourceTree = SOURCE_ROOT; };
 		1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TrafficModel.mlmodel; sourceTree = SOURCE_ROOT; };
+		1AA8183C2C09F045001A0537 /* ObjectDetections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetections.swift; sourceTree = "<group>"; };
+		1AA8183E2C09F398001A0537 /* TinyYOLO.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TinyYOLO.mlmodel; sourceTree = SOURCE_ROOT; };
+		1AA818422C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Int8LUT.mlmodel; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +150,8 @@
 				1A293E0D2BF231EC00381D5F /* SentimentModel.mlmodel */,
 				1A5F0B162BF2681A009C84A8 /* TrafficModel.mlmodel */,
 				1A00381B2BFA03AD00890E34 /* ObjectDetection.mlmodel */,
+				1AA8183E2C09F398001A0537 /* TinyYOLO.mlmodel */,
+				1AA818422C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel */,
 			);
 			path = YanJiAIUITests;
 			sourceTree = "<group>";
@@ -149,6 +161,7 @@
 			children = (
 				1A293DE32BF22B9000381D5F /* ContentView.swift */,
 				1A293E0B2BF22BAA00381D5F /* CameraView.swift */,
+				1AA8183C2C09F045001A0537 /* ObjectDetections.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -283,12 +296,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA818432C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */,
 				1A293E0C2BF22BAA00381D5F /* CameraView.swift in Sources */,
 				1A00381C2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
 				1A293DE42BF22B9000381D5F /* ContentView.swift in Sources */,
 				1A293E0E2BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
+				1AA8183D2C09F045001A0537 /* ObjectDetections.swift in Sources */,
 				1A5F0B172BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
 				1A293DE22BF22B9000381D5F /* YanJiAIApp.swift in Sources */,
+				1AA8183F2C09F398001A0537 /* TinyYOLO.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,7 +313,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A293E0F2BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
+				1AA818402C09F398001A0537 /* TinyYOLO.mlmodel in Sources */,
 				1A00381D2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
+				1AA818442C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */,
 				1A5F0B182BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
 				1A293DF32BF22B9300381D5F /* YanJiAITests.swift in Sources */,
 			);
@@ -310,6 +328,8 @@
 				1A5F0B192BF2681A009C84A8 /* TrafficModel.mlmodel in Sources */,
 				1A00381E2BFA03AE00890E34 /* ObjectDetection.mlmodel in Sources */,
 				1A293E102BF231EC00381D5F /* SentimentModel.mlmodel in Sources */,
+				1AA818412C09F398001A0537 /* TinyYOLO.mlmodel in Sources */,
+				1AA818452C0A3D7F001A0537 /* YOLOv3Int8LUT.mlmodel in Sources */,
 				1A293DFF2BF22B9300381D5F /* YanJiAIUITestsLaunchTests.swift in Sources */,
 				1A293DFD2BF22B9300381D5F /* YanJiAIUITests.swift in Sources */,
 			);
@@ -469,7 +489,9 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -502,7 +524,9 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

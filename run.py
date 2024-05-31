@@ -326,7 +326,7 @@ class 眼迹AI:
 
                     if lEyes is None and rEyes is None or xRegion == 0 and yRegion == 0:
                         print(pure_red + "[警告：请保持注意力集中在前方!!!] ")
-                        self.warning(帧, "WARNING: PLEASE KEEP YOU EYE ON THE FRONT!!!", 1, (0, 0, 255), 2)
+                        self.warning(帧, "WARNING: PLEASE KEEP YOU EYE ON THE FRONT !!!", 1, (0, 0, 255), 2)
 
                     # 在眼睛周围绘制一个矩形
                     # cv2.rectangle(帧, (ex, ey), (ex + ew, ey + eh), 颜色, thickness=3)

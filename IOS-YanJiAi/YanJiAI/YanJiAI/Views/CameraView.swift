@@ -39,7 +39,8 @@ class CameraView: UIViewController
     
     private var sentimentModel: SentimentModel!
     private var trafficModel: TrafficModel!
-    private var objectDetection: ObjectDetection!
+    private var objectDetection: TinyYOLO!
+    private var yoloModel: YOLOv3Int8LUT!
     
     public let captureSession = AVCaptureSession()
     public let videoDataOutput = AVCaptureVideoDataOutput()
@@ -49,6 +50,8 @@ class CameraView: UIViewController
     
     private let movieOutput = AVCaptureMovieFileOutput()
     private var isRecording: Bool = false
+    
+    private var yoloRequest: VNCoreMLRequest!
     
     private lazy var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
     
@@ -67,15 +70,16 @@ class CameraView: UIViewController
     {
         super.viewDidLoad()
         
-        self.loadSentimentModel()
-        self.loadTrafficModel()
-        
         self.addCameraInput()
         self.showCameraInput()
         
         self.getCameraFrame()
         
         self.captureSession.startRunning()
+        
+        self.loadSentimentModel()
+        self.loadTrafficModel()
+        self.loadYOLOModel()
     }
     
     public override func viewDidLayoutSubviews() 
@@ -94,6 +98,35 @@ class CameraView: UIViewController
         }
             
         self.addCameraInput()
+    }
+    
+    private func loadYOLOModel() -> Void
+    {
+        guard let modelURL = Bundle.main.url(forResource: "YOLOv3Int8LUT", withExtension: "mlmodelc") else
+        {
+            fatalError("无法加载 YOLOv3Int8LUT.mlmodelc")
+        }
+        
+        do
+        {
+            let model = try MLModel(contentsOf: modelURL)
+                
+            self.yoloModel = try YOLOv3Int8LUT(contentsOf: modelURL)
+        }
+        catch
+        {
+            fatalError("Failed to load model: \(error.localizedDescription)")
+        }
+    }
+    
+    private func handleYOLODetection(_ request: VNRequest, error: Error?) -> Void
+    {
+        guard let results = request.results as? [VNRecognizedObjectObservation] else 
+        {
+            return
+        }
+        
+        self.handleObjectDetectionResults(results)
     }
     
     private func detectTraffic(image: CVPixelBuffer) 
@@ -257,7 +290,8 @@ class CameraView: UIViewController
         let faceDetectedRequest = VNDetectFaceLandmarksRequest(completionHandler:
         {
             vnRequest, err in
-            DispatchQueue.main.async 
+            
+            DispatchQueue.main.async
             {
                 if let results = vnRequest.results as? [VNFaceObservation], results.count > 0 {
                     
@@ -300,26 +334,41 @@ class CameraView: UIViewController
             let faceBoundShape2 = CAShapeLayer()
             let textLayer = CATextLayer()
             
+            let genderLayer = CATextLayer()
+            
             textLayer.string = "✅ 人类"
+            textLayer.isWrapped = false
             textLayer.foregroundColor = UIColor.white.cgColor
-            textLayer.fontSize = 20
+            textLayer.fontSize = 30
             textLayer.isHidden = false
             textLayer.alignmentMode = .left
             textLayer.frame = CGRect(
                 x: faceBoundBoxOnScreen.origin.x,
-                y: faceBoundBoxOnScreen.origin.y - 30,
+                y: faceBoundBoxOnScreen.origin.y - 50,
                 width: faceBoundBoxOnScreen.size.width,
                 height: 50
             )
+            
+            genderLayer.string = "➡️ 男"
+            genderLayer.fontSize = 30
+            genderLayer.frame = CGRect(
+                x: faceBoundBoxOnScreen.origin.x + 160,
+                y: faceBoundBoxOnScreen.origin.y - 50,
+                width: faceBoundBoxOnScreen.size.width,
+                height: 50
+            )
+            
             
             faceBoundShape.path = faceBoundBoxPath
             faceBoundShape.fillColor = UIColor.clear.cgColor
             faceBoundShape.strokeColor = UIColor.systemPink.cgColor
             faceBoundShape.isHidden = false
-            faceBoundShape.lineWidth = 3
+            faceBoundShape.lineWidth = 2
             faceBoundShape.bounds = CGRect.zero
+            faceBoundShape.isDoubleSided = true
             faceBoundShape.allowsEdgeAntialiasing = true
             faceBoundShape.addSublayer(textLayer)
+            faceBoundShape.addSublayer(genderLayer)
             
             return faceBoundShape
         })
@@ -391,42 +440,53 @@ class CameraView: UIViewController
         do 
         {
             let model = try MLModel(contentsOf: modelURL)
-            self.objectDetection = ObjectDetection(model: model)
-        } 
+            self.objectDetection = TinyYOLO(model: model)
+        }
         catch
         {
             fatalError("Failed to load model: \(error.localizedDescription)")
         }
     }
     
-    public func objectRecognition(image: CVPixelBuffer) -> Void
+    public func objectRecognition(image: CVPixelBuffer) -> Void 
     {
-        guard let model = try? VNCoreMLModel(for: self.objectDetection.model) else
+        do 
         {
-            fatalError("Failed to create VNCoreMLModel")
-        }
-        
-        let request = VNCoreMLRequest(model: model) 
-        { request, error in
-            guard let results = request.results as? [VNRecognizedObjectObservation] else { return }
-                
-            DispatchQueue.main.async
+            guard let model = try? VNCoreMLModel(for: self.objectDetection.model) else 
             {
-                self.handleObjectDetectionResults(results)
+                fatalError("Failed to create VNCoreMLModel")
             }
-        }
-        
-        let handler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
-        
-        do
-        {
+            
+            let request = VNCoreMLRequest(model: model)
+            { request, error in
+                // Check for any errors
+                if let error = error 
+                {
+                    NSLog("Error performing object detection: \(error)")
+                    return
+                }
+                
+                guard let results = request.results as? [VNRecognizedObjectObservation] else 
+                {
+                    NSLog("No results found")
+                    return
+                }
+                
+                DispatchQueue.main.async 
+                {
+                    self.handleObjectDetectionResults(results)
+                }
+            }
+            
+            let handler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
             try handler.perform([request])
         } 
         catch
         {
-            NSLog("Error performing object detection: \(error)")
+            NSLog("Error creating VNCoreMLModel: \(error)")
         }
     }
+
     
     private func handleObjectDetectionResults(_ results: [VNRecognizedObjectObservation])
     {
@@ -513,15 +573,27 @@ extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) 
     {
         
+        let yolo :Bool = true
+        
         guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else 
         {
             NSLog("样本缓冲为空")
             return
         }
         
-        self.detectFaces(image: frame)
-        self.detectTraffic(image: frame)
-        
-        // self.objectRecognition(image: frame)
+        do
+        {
+            self.detectFaces(image: frame)
+            self.detectTraffic(image: frame)
+            
+            if yolo
+            {
+                self.objectRecognition(image: frame)
+            }
+        }
+        catch
+        {
+            NSError(domain: "Err | Neural Network Failed", code: 0)
+        }
     }
 }
