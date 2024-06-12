@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: freebsd-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: 检出仓库
