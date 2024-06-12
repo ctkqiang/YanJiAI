@@ -23,12 +23,8 @@ jobs:
 
     - name: 安装依赖项
       run: |
-        python2 -m pip install --upgrade pip
         python3 -m pip install --upgrade pip
-        pip3 install numpy opencv-python aiohttp==3.8.1 cchardet==2.1.7
-        pip install numpy opencv-python aiohttp==3.8.1 cchardet==2.1.7
         pip3 install -r requirements.txt
-        pip install -r requirements.txt
 
     - name: 构建二进制文件
       run: pyinstaller --onefile run.py

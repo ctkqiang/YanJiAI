@@ -5,4 +5,6 @@ deepface
 torch
 tensorflow
 onx
-onnx2keras  
+onnx2keras
+aiohttp
+cchardet
