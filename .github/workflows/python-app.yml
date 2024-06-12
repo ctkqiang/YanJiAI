@@ -18,10 +18,14 @@ jobs:
       with:
         python-version: '3.x' 
 
+    - name: 安装系统依赖项
+      run: brew install pkg-config
+
     - name: 安装依赖项
       run: |
         python3 -m pip install --upgrade pip
         pip3 install numpy opencv-python
+        pip3 install aiohttp==3.8.1 cchardet==2.1.7
         pip3 install -r requirements.txt
 
     - name: 构建二进制文件
