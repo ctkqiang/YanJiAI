@@ -1,4 +1,4 @@
-name: Release Python OpenCV App
+name: 发布眼迹AI
 
 on:
   push:
@@ -10,23 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: 检出仓库
       uses: actions/checkout@v2
 
-    - name: Set up Python
+    - name: 设置Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x' # specify your desired Python version here
+        python-version: '3.x' 
 
-    - name: Install dependencies
+    - name: 安装依赖项
       run: |
-        python -m pip install --upgrade pip
-        pip install numpy opencv-python
+        python3 -m pip install --upgrade pip
+        pip3 install numpy opencv-python
+        pip3 install -r requirements.txt
 
-    - name: Build binary
-      run: pyinstaller --onefile your_app.py  # replace `your_app.py` with the main file of your application
+    - name: 构建二进制文件
+      run: pyinstaller --onefile run.py
 
-    - name: Create release
+    - name: 读取Changelog
+      id: read_changelog
+      run: echo "CHANGELOG_CONTENT<<EOF" > $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
+
+    - name: 创建发布
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -34,7 +39,6 @@ jobs:
       with:
         tag_name: v${{ github.run_number }}
         release_name: Release ${{ github.run_number }}
-        body: |
-          Binary release of the Python OpenCV app.
+        body: ${{ env.CHANGELOG_CONTENT }}
         draft: false
         prerelease: false
