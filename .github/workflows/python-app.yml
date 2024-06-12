@@ -16,19 +16,23 @@ jobs:
     - name: 设置Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10.6' 
+        python-version: '3.x'
+
+    - name: 创建和激活Python虚拟环境
+      run: python3 -m venv venv && source venv/bin/activate
 
     - name: 安装系统依赖项
-      run: | 
-        brew install pkg-config
+      run: |
         brew update
         brew install pkg-config
         brew install openssl
         brew install libffi
-      
+
     - name: 安装依赖项
       run: |
         python3 -m pip install --upgrade pip
+        pip3 install numpy opencv-python
+        pip3 install aiohttp==3.8.1 cchardet==2.1.7
         pip3 install -r requirements.txt
 
     - name: 构建二进制文件
