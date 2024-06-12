@@ -23,8 +23,8 @@ jobs:
 
     - name: 安装系统依赖项
       run: |
-        pkg update
-        pkg install -y pkgconf openssl libffi
+        sudo apt update
+        sudo apt install -y pkg-config libssl-dev libffi-dev
 
     - name: 安装依赖项
       run: |
