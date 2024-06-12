@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - name: 检出仓库
@@ -29,7 +29,7 @@ jobs:
 
     - name: 读取Changelog
       id: read_changelog
-      run: echo "CHANGELOG_CONTENT<<EOF" > $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
+      run: echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_ENV && cat CHANGELOG.md >> $GITHUB_ENV && echo "EOF" >> $GITHUB_ENV
 
     - name: 创建发布
       id: create_release
