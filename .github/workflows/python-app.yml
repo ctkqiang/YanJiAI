@@ -19,8 +19,13 @@ jobs:
         python-version: '3.x' 
 
     - name: 安装系统依赖项
-      run: brew install pkg-config
-
+      run: | 
+        brew install pkg-config
+        brew update
+        brew install pkg-config
+        brew install openssl
+        brew install libffi
+      
     - name: 安装依赖项
       run: |
         python3 -m pip install --upgrade pip
