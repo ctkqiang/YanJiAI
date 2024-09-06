@@ -64,7 +64,7 @@ class 眼迹AI:
 
         self.初始帧数: object = None
         self.显示文字: bool = False
-        self.train :bool = False
+        self.train: bool = False
 
         self.人脸配置: str = "assets/training_bin/opencv_face_detector.pbtxt"
         self.人脸模型: str = "assets/training_bin/opencv_face_detector_uint8.pb"
@@ -72,7 +72,7 @@ class 眼迹AI:
         self.年龄模型: str = "assets/training_bin/age_net.caffemodel"
         self.性别配置: str = "assets/training_bin/gender_deploy.prototxt"
         self.性别模型: str = "assets/training_bin/gender_net.caffemodel"
-        
+
         self.物体检测模型名称: str = "object_detection_model"
 
         """
@@ -80,7 +80,6 @@ class 眼迹AI:
         self.object_detection_model.load_state_dict(torch.load("{}.pth".format(self.物体检测模型名称)))
         self.object_detection_model.eval()
         """
-            
 
     def 记录信息(self, 信息: str) -> None:
         """
@@ -89,7 +88,7 @@ class 眼迹AI:
         Args:
             信息 (str): 要记录的信息。
         """
-        现在时间 :str = str(datetime.now().strftime("%H:%M:%S"))
+        现在时间: str = str(datetime.now().strftime("%H:%M:%S"))
         print(light_green + f"{self.名称} |> [{现在时间}] {信息}")
 
     def 计算眨眼(self, 眼睛) -> float:
@@ -104,7 +103,7 @@ class 眼迹AI:
         """
         if len(眼睛) == 2:
             (ex1, ey1, ew1, eh1), (ex2, ey2, ew2, eh2) = 眼睛
-            
+
             # 计算两只眼睛的中心点
             中心_x1 = ex1 + ew1 // 2
             中心_y1 = ey1 + eh1 // 2
@@ -122,7 +121,7 @@ class 眼迹AI:
         global 方向文本
         global 用户情绪
         global 性别标签
-        
+
         设备名称 = self.捕获.get(cv2.CAP_PROP_POS_MSEC)
 
         if not os.path.exists(f"{self.物体检测模型名称}.pth"):
@@ -137,7 +136,9 @@ class 眼迹AI:
         self.索引 += 1
 
         for self.索引, 设备名称 in self.可用摄像头:
-            self.记录信息(信息= f"{self.捕获.__str__()} | 摄像头 {self.索引}: {设备名称}")
+            self.记录信息(
+                信息=f"{self.捕获.__str__()} | 摄像头 {self.索引}: {设备名称}"
+            )
 
         if not os.path.exists(self.字体路径):
             self.记录信息(信息=f"[x] {self.字体路径} 不存在! [x]")
@@ -166,16 +167,24 @@ class 眼迹AI:
             # 在帧中检测人脸
             脸部 = self.眼部分类器.detectMultiScale(灰度)
 
-            颜色 = (255, 255, 255)
+            颜色 = (255, 50, 0)
 
             for fx, fy, fw, fh in 脸部:
                 # 绘制圆形区域以表示脸部 | 绘制具有圆角的矩形
                 半径 = int(min(fw, fh) / 2)
 
-                cv2.rectangle(帧, (int(fx), int(fy)), (int(fx + fw), int(fy + fh)), 颜色, thickness=2)
+                cv2.rectangle(
+                    帧,
+                    (int(fx), int(fy)),
+                    (int(fx + fw), int(fy + fh)),
+                    颜色,
+                    thickness=2,
+                )
 
                 # 为人脸检测准备输入图像
-                图像blob = cv2.dnn.blobFromImage(帧, 1.0, (300, 300), [104, 117, 123], False, False)
+                图像blob = cv2.dnn.blobFromImage(
+                    帧, 1.0, (300, 300), [104, 117, 123], False, False
+                )
 
                 # 执行人脸检测
                 人脸网络.setInput(图像blob)
@@ -188,15 +197,17 @@ class 眼迹AI:
                     # 根据置信度阈值过滤掉弱检测结果
                     if 置信度 > 0.5:
                         # 提取边界框坐标
-                        边界框  = 检测结果[0, 0, i, 3:7] * np.array([帧.shape[1], 帧.shape[0], 帧.shape[1], 帧.shape[0]])
+                        边界框 = 检测结果[0, 0, i, 3:7] * np.array(
+                            [帧.shape[1], 帧.shape[0], 帧.shape[1], 帧.shape[0]]
+                        )
 
                         (起始X, 起始Y, 结束X, 结束Y) = 边界框.astype("int")
 
                         # 提取人脸区域
-                        人脸区域  = 帧[起始Y:结束Y, 起始X:结束X]
+                        人脸区域 = 帧[起始Y:结束Y, 起始X:结束X]
 
                         # 为年龄分类准备人脸图像
-                        人脸blob  = cv2.dnn.blobFromImage(
+                        人脸blob = cv2.dnn.blobFromImage(
                             人脸区域,
                             1.0,
                             (227, 227),
@@ -224,7 +235,9 @@ class 眼迹AI:
                         性别 = "Male" if 性别预测[0][0] > 性别预测[0][1] else "Female"
 
                         # 在帧上叠加性别标签
-                        性别标签 = "{}: {:.2f}%".format(性别, max(性别预测[0][0], 性别预测[0][1]) * 100)
+                        性别标签 = "{}: {:.2f}%".format(
+                            性别, max(性别预测[0][0], 性别预测[0][1]) * 100
+                        )
 
                         cv2.putText(
                             帧,
@@ -234,8 +247,8 @@ class 眼迹AI:
                             1,
                             颜色,
                             2,
-                            cv2.LINE_AA, 
-                            False
+                            cv2.LINE_AA,
+                            False,
                         )
 
                         cv2.putText(
@@ -246,10 +259,10 @@ class 眼迹AI:
                             1,
                             颜色,
                             2,
-                            cv2.LINE_AA, 
-                            False
+                            cv2.LINE_AA,
+                            False,
                         )
-                    else: 
+                    else:
                         continue
 
             """
@@ -289,7 +302,7 @@ class 眼迹AI:
 
                     # 根据眼睛中心点位置判断朝向
                     if self.显示文字:
-                        
+
                         if 眼睛中心_x < 帧.shape[1] // 3:
                             方向文本 = "向左看"  # 如果眼睛中心在帧的左侧
                             颜色 = (255, 0, 0)  # 红色
@@ -320,13 +333,19 @@ class 眼迹AI:
                     yRegion: float = 结果[0]["region"]["y"]
                     wRegion: float = 结果[0]["region"]["w"]
                     hRegion: float = 结果[0]["region"]["h"]
-                    
+
                     lEyes: list = 结果[0]["region"]["left_eye"]
                     rEyes: list = 结果[0]["region"]["right_eye"]
 
                     if lEyes is None and rEyes is None or xRegion == 0 and yRegion == 0:
                         print(pure_red + "[警告：请保持注意力集中在前方!!!] ")
-                        self.warning(帧, "WARNING: PLEASE KEEP YOU EYE ON THE FRONT !!!", 1, (0, 0, 255), 2)
+                        self.warning(
+                            帧,
+                            "WARNING: PLEASE KEEP YOU EYE ON THE FRONT !!!",
+                            1,
+                            (0, 0, 255),
+                            2,
+                        )
 
                     # 在眼睛周围绘制一个矩形
                     # cv2.rectangle(帧, (ex, ey), (ex + ew, ey + eh), 颜色, thickness=3)
@@ -342,7 +361,7 @@ class 眼迹AI:
 
                     self.记录信息(
                         信息=f"性别: ({性别标签}) | {情绪}\t{情绪准确性 * 100} % | [ 左眼: {lEyes}, 右眼: {rEyes} ] x: {xRegion}, y: {yRegion}, w: {wRegion}, h: {hRegion}".upper()
-                    ) 
+                    )
 
                     cv2.putText(
                         帧,
@@ -352,7 +371,7 @@ class 眼迹AI:
                         0.9,
                         颜色,
                         1,
-                        cv2.LINE_AA
+                        cv2.LINE_AA,
                     )
 
                     cv2.putText(
@@ -363,7 +382,7 @@ class 眼迹AI:
                         1,
                         颜色,
                         2,
-                        cv2.LINE_AA
+                        cv2.LINE_AA,
                     )
 
                     cv2.putText(
@@ -374,7 +393,7 @@ class 眼迹AI:
                         1,
                         颜色,
                         2,
-                        cv2.LINE_AA
+                        cv2.LINE_AA,
                     )
 
                     cv2.putText(
@@ -385,7 +404,7 @@ class 眼迹AI:
                         1,
                         颜色,
                         2,
-                        cv2.LINE_AA
+                        cv2.LINE_AA,
                     )
 
                     cv2.putText(
@@ -451,14 +470,14 @@ class 眼迹AI:
 
                             self.记录信息(信息="眨眼")
 
-                    if self.显示文字: 
+                    if self.显示文字:
                         self.记录信息(信息=方向文本)
 
             # 显示帧
             cv2.imshow(self.名称, 帧)
 
             # 如果按下 'q' 键，则退出循环
-            if cv2.waitKey(1) & 0xFF in [ ord("q"), ord("z") ]:
+            if cv2.waitKey(1) & 0xFF in [ord("q"), ord("z")]:
                 exit(0)
                 break
 
@@ -472,13 +491,22 @@ class 眼迹AI:
 
         # 获取文本大小
         text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
-        
+
         # 计算文本在帧底部的位置
         text_x = int((frame.shape[1] - text_size[0]) / 2)
         text_y = frame.shape[0] - 20  # 根据需要调整此值以设置距离帧底部的距离
 
         # 将文本放置在帧底部
-        cv2.putText(frame, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            text,
+            (text_x, text_y),
+            font,
+            font_scale,
+            color,
+            thickness,
+            cv2.LINE_AA,
+        )
 
 
 if __name__ == "__main__":
