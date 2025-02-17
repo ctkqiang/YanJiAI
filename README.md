@@ -71,48 +71,101 @@ python3 run.py
 ```bash
 [警告：请保持注意力集中在前方!!!] 
 ```
+## 🌟 开源项目赞助计划
 
-### 个人捐赠支持
-如果您认为该项目对您有所帮助，并且愿意个人捐赠以支持其持续发展和维护，🥰我非常感激您的慷慨。
-您的捐赠将帮助我继续改进和添加新功能到该项目中。 通过财务捐赠，您将有助于确保该项目保持免
-费和对所有人开放。即使是一小笔捐款也能产生巨大的影响，也是对我个人的鼓励。
+### 用捐赠助力发展
 
-## 支持项目 (Support the Project)
+感谢您使用本项目！您的支持是开源持续发展的核心动力。  
+每一份捐赠都将直接用于：  
+✅ 服务器与基础设施维护  
+✅ 新功能开发与版本迭代  
+✅ 文档优化与社区建设
 
-如果您认为该项目对您有所帮助，您可以通过以下方式支持项目的持续发展：
+点滴支持皆能汇聚成海，让我们共同打造更强大的开源工具！
 
-### 💰 捐赠渠道 (Donation Channels)
+---
 
-<table>
-  <tr>
-    <td align="center"><strong>微信支付<br/>WeChat Pay</strong></td>
-    <td align="center"><strong>支付宝<br/>Alipay</strong></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9863.jpg?raw=true" width="250" /></td>
-    <td><img src="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9859.JPG?raw=true" width="250" /></td>
-  </tr>
-</table>
+### 🌐 全球捐赠通道
 
-### 🌏 国际支付方式 (International Payment Methods)
+#### 国内用户
+
+<div align="center" style="margin: 40px 0">
 
 <div align="center">
-  
-[![Donate with Ko-fi](https://img.shields.io/badge/Donate_with-Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/F1F5VCZJU)
-[![Donate with PayPal](https://img.shields.io/badge/Donate_with-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/ctkqiang)
-[![Donate with Stripe](https://img.shields.io/badge/Donate_with-Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white)](https://donate.stripe.com/00gg2nefu6TK1LqeUY)
-
+<table>
+<tr>
+<td align="center" width="300">
+<img src="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9863.jpg?raw=true" width="200" />
+<br />
+<strong>🔵 支付宝</strong>
+</td>
+<td align="center" width="300">
+<img src="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9859.JPG?raw=true" width="200" />
+<br />
+<strong>🟢 微信支付</strong>
+</td>
+</tr>
+</table>
+</div>
 </div>
 
-您的支持将帮助我:
+#### 国际用户
 
-- 🚀 持续改进项目功能
-- 🛠 维护和更新代码
-- 📚 提供更好的文档
-- 💡 开发新的特性
+<div align="center" style="margin: 40px 0">
+  <a href="https://qr.alipay.com/fkx19369scgxdrkv8mxso92" target="_blank">
+    <img src="https://img.shields.io/badge/Alipay-全球支付-00A1E9?style=flat-square&logo=alipay&logoColor=white&labelColor=008CD7">
+  </a>
+  
+  <a href="https://ko-fi.com/F1F5VCZJU" target="_blank">
+    <img src="https://img.shields.io/badge/Ko--fi-买杯咖啡-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white">
+  </a>
+  
+  <a href="https://www.paypal.com/paypalme/ctkqiang" target="_blank">
+    <img src="https://img.shields.io/badge/PayPal-安全支付-00457C?style=flat-square&logo=paypal&logoColor=white">
+  </a>
+  
+  <a href="https://donate.stripe.com/00gg2nefu6TK1LqeUY" target="_blank">
+    <img src="https://img.shields.io/badge/Stripe-企业级支付-626CD9?style=flat-square&logo=stripe&logoColor=white">
+  </a>
+</div>
 
-即使是小额捐赠也能带来巨大帮助。感谢您的支持！ 🙏
+---
 
+### 📌 开发者社交图谱
 
-## 关注我
-<a href="https://twitch.tv/ctkqiang"><img src="https://img.shields.io/badge/Twitch-9146FF?style=for-the-badge&logo=twitch&logoColor=white"></a> <a href="https://open.spotify.com/user/22sblyn4dsymya3xinw3umhai"><img src="https://img.shields.io/badge/Spotify-1ED760?&style=for-the-badge&logo=spotify&logoColor=white"></a> <a href="https://www.tiktok.com/@ctkqiang"><img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white"></a> <a href="https://stackoverflow.com/users/10758321/%e9%92%9f%e6%99%ba%e5%bc%ba"><img src="https://img.shields.io/badge/Stack_Overflow-FE7A16?style=for-the-badge&logo=stack-overflow&logoColor=white"></a> <a href="https://www.facebook.com/JohnMelodyme/"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white"></a> <a href="https://github.com/ctkqiang"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> <a href="https://www.instagram.com/ctkqiang"><img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"></a> <a href="https://www.linkedin.com/in/ctkqiang/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a> <a href="https://linktr.ee/ctkqiang.official"><img src="https://img.shields.io/badge/linktree-39E09B?style=for-the-badge&logo=linktree&logoColor=white"></a> <a href="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9245.JPG?raw=true"><img src="https://img.shields.io/badge/WeChat-07C160?style=for-the-badge&logo=wechat&logoColor=white"></a>
+#### 技术交流
+
+<div align="center" style="margin: 20px 0">
+  <a href="https://github.com/ctkqiang" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-开源仓库-181717?style=for-the-badge&logo=github">
+  </a>
+  
+  <a href="https://stackoverflow.com/users/10758321/%e9%92%9f%e6%99%ba%e5%bc%ba" target="_blank">
+    <img src="https://img.shields.io/badge/Stack_Overflow-技术问答-F58025?style=for-the-badge&logo=stackoverflow">
+  </a>
+  
+  <a href="https://www.linkedin.com/in/ctkqiang/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-职业网络-0A66C2?style=for-the-badge&logo=linkedin">
+  </a>
+</div>
+
+#### 社交互动
+
+<div align="center" style="margin: 20px 0">
+  <a href="https://www.instagram.com/ctkqiang" target="_blank">
+    <img src="https://img.shields.io/badge/Instagram-生活瞬间-E4405F?style=for-the-badge&logo=instagram">
+  </a>
+  
+  <a href="https://twitch.tv/ctkqiang" target="_blank">
+    <img src="https://img.shields.io/badge/Twitch-技术直播-9146FF?style=for-the-badge&logo=twitch">
+  </a>
+  
+  <a href="https://github.com/ctkqiang/ctkqiang/blob/main/assets/IMG_9245.JPG?raw=true" target="_blank">
+    <img src="https://img.shields.io/badge/微信公众号-钟智强-07C160?style=for-the-badge&logo=wechat">
+  </a>
+</div>
+
+---
+
+🙌 感谢您成为开源社区的重要一员！  
+💬 捐赠后欢迎通过社交平台与我联系，您的名字将出现在项目致谢列表！
